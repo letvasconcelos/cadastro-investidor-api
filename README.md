@@ -20,7 +20,7 @@ Microsserviço para CRUD de investidores da plataforma de negociação. API REST
 | `DB_PASSWORD` | Senha do banco |
 | `APP_PORT` | Porta da aplicação (padrão: 8080) |
 
-Para execução local, copie `.env.example` para `.env` e substitua os valores conforme o seu ambiente. O arquivo `.env` não é versionado.
+Para execução local, crie um arquivo `.env` com as variáveis acima. O arquivo `.env` não é versionado.
 
 ## Secrets para deploy
 
