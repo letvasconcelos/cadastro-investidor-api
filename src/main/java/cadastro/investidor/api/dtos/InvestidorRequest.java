@@ -18,9 +18,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InvestidorRequest {
 
-	@NotNull
-	private Integer codigo;
-
 	@NotBlank
 	private String nome;
 

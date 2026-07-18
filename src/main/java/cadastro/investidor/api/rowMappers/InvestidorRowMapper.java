@@ -2,6 +2,7 @@ package cadastro.investidor.api.rowMappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,8 @@ public class InvestidorRowMapper implements RowMapper<Investidor> {
 				.nome(rs.getString("nome"))
 				.cpf(rs.getString("cpf"))
 				.aptaNegociacao(rs.getBoolean("apta_negociacao"))
-				.dataCriacao(rs.getTimestamp("data_criacao").toLocalDateTime())
+				.dataCriacao(rs.getObject("data_criacao", LocalDateTime.class))
+				.dataAtualizacao(rs.getObject("data_atualizacao", LocalDateTime.class))
 				.build();
 	}
 }

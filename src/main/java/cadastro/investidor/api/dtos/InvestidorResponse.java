@@ -26,9 +26,13 @@ public class InvestidorResponse {
 	@JsonProperty("apta_negociacao")
 	private boolean aptaNegociacao;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:SSS")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
 	@JsonProperty("data_criacao")
 	private LocalDateTime dataCriacao;
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+	@JsonProperty("data_atualizacao")
+	private LocalDateTime dataAtualizacao;
 
 	public static InvestidorResponse from(Investidor investidor) {
 		return InvestidorResponse.builder()
@@ -37,6 +41,7 @@ public class InvestidorResponse {
 				.cpf(investidor.getCpf())
 				.aptaNegociacao(investidor.isAptaNegociacao())
 				.dataCriacao(investidor.getDataCriacao())
+				.dataAtualizacao(investidor.getDataAtualizacao())
 				.build();
 	}
 }

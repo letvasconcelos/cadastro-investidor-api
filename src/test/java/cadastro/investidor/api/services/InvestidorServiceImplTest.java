@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +51,16 @@ class InvestidorServiceImplTest {
 	}
 
 	@Test
+	void deveListarTodosOsInvestidores() {
+		when(repository.findAll()).thenReturn(List.of(investidor()));
+
+		List<InvestidorResponse> response = service.listarTodos();
+
+		assertEquals(1, response.size());
+		assertEquals(1, response.getFirst().getCodigo());
+	}
+
+	@Test
 	void deveFalharAoBuscarInvestidorInexistente() {
 		when(repository.findByCodigo(1)).thenReturn(Optional.empty());
 
@@ -60,7 +71,7 @@ class InvestidorServiceImplTest {
 	void deveCriarInvestidor() {
 		InvestidorRequest request = request();
 		Investidor investidor = investidor();
-		when(repository.findByCodigo(1)).thenReturn(Optional.empty());
+		when(repository.findByCpf(request.getCpf())).thenReturn(Optional.empty());
 		when(repository.save(any(Investidor.class))).thenReturn(investidor);
 
 		InvestidorResponse response = service.criar(request);
@@ -72,7 +83,7 @@ class InvestidorServiceImplTest {
 	@Test
 	void deveFalharAoCriarCodigoExistente() {
 		InvestidorRequest request = request();
-		when(repository.findByCodigo(1)).thenReturn(Optional.of(investidor()));
+		when(repository.findByCpf(request.getCpf())).thenReturn(Optional.of(investidor()));
 
 		assertThrows(InvestidorAlreadyExistsException.class, () -> service.criar(request));
 	}
@@ -82,9 +93,10 @@ class InvestidorServiceImplTest {
 		InvestidorRequest request = request();
 		Investidor investidor = investidor();
 		when(repository.findByCodigo(1)).thenReturn(Optional.of(investidor));
+		when(repository.findByCpf(request.getCpf())).thenReturn(Optional.of(investidor));
 		when(repository.update(any(Investidor.class))).thenReturn(investidor);
 
-		InvestidorResponse response = service.atualizar(request);
+		InvestidorResponse response = service.atualizar(1, request);
 
 		assertEquals(1, response.getCodigo());
 		verify(repository).update(any(Investidor.class));
@@ -101,9 +113,8 @@ class InvestidorServiceImplTest {
 
 	private InvestidorRequest request() {
 		return InvestidorRequest.builder()
-				.codigo(1)
 				.nome("Vitoria")
-				.cpf("123456789")
+				.cpf("12345678901")
 				.aptaNegociacao(true)
 				.build();
 	}
@@ -112,9 +123,10 @@ class InvestidorServiceImplTest {
 		return Investidor.builder()
 				.codigo(1)
 				.nome("Vitoria")
-				.cpf("123456789")
+				.cpf("12345678901")
 				.aptaNegociacao(true)
 				.dataCriacao(LocalDateTime.of(2026, 5, 5, 0, 0))
+				.dataAtualizacao(LocalDateTime.of(2026, 5, 5, 0, 0))
 				.build();
 	}
 }

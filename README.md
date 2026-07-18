@@ -6,10 +6,35 @@ Microsserviço para CRUD de investidores da plataforma de negociação. API REST
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| GET | `/v1/cadastros/investidor?codigo={codigo}` | Buscar investidor por código |
-| POST | `/v1/cadastros/investidor` | Criar investidor |
-| PUT | `/v1/cadastros/investidor` | Atualizar investidor |
-| DELETE | `/v1/cadastros/investidor?codigo={codigo}` | Remover investidor |
+| GET | `/cadastro-investidor-api/v1/investidores` | Listar investidores |
+| GET | `/cadastro-investidor-api/v1/investidores/{codigo}` | Buscar investidor por código |
+| POST | `/cadastro-investidor-api/v1/investidores` | Criar investidor |
+| PUT | `/cadastro-investidor-api/v1/investidores/{codigo}` | Atualizar investidor |
+| DELETE | `/cadastro-investidor-api/v1/investidores/{codigo}` | Remover investidor |
+
+O corpo de criação e atualização contém somente os campos editáveis:
+
+```json
+{
+  "nome": "Maria Silva",
+  "cpf": "12345678901",
+  "apta_negociacao": true
+}
+```
+
+Código, data de criação e data de atualização são gerados pelo banco.
+
+## Nginx
+
+```nginx
+location /cadastro-investidor-api/v1/investidores {
+    proxy_pass http://cadastro-investidor-api:8080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
 
 ## Variáveis de ambiente
 

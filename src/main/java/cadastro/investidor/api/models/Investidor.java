@@ -20,4 +20,5 @@ public class Investidor {
 	private String cpf;
 	private boolean aptaNegociacao;
 	private LocalDateTime dataCriacao;
+	private LocalDateTime dataAtualizacao;
 }

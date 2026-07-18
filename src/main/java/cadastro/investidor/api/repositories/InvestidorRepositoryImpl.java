@@ -1,5 +1,6 @@
 package cadastro.investidor.api.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,24 +14,38 @@ import cadastro.investidor.api.rowMappers.InvestidorRowMapper;
 public class InvestidorRepositoryImpl implements InvestidorRepository {
 
 	private static final String SELECT_BY_CODIGO = """
-			SELECT codigo, nome, cpf, apta_negociacao, data_criacao
-			FROM investidor
+			SELECT codigo, nome, cpf, apta_negociacao, data_criacao, data_atualizacao
+			FROM cadastros.investidor
 			WHERE codigo = ?
+			""";
+
+	private static final String SELECT_BY_CPF = """
+			SELECT codigo, nome, cpf, apta_negociacao, data_criacao, data_atualizacao
+			FROM cadastros.investidor
+			WHERE cpf = ?
+			""";
+
+	private static final String SELECT_ALL = """
+			SELECT codigo, nome, cpf, apta_negociacao, data_criacao, data_atualizacao
+			FROM cadastros.investidor
+			ORDER BY codigo
 			""";
 
 	private static final String INSERT = """
-			INSERT INTO investidor (codigo, nome, cpf, apta_negociacao)
-			VALUES (?, ?, ?, ?)
+			INSERT INTO cadastros.investidor (nome, cpf, apta_negociacao)
+			VALUES (?, ?, ?)
+			RETURNING codigo, nome, cpf, apta_negociacao, data_criacao, data_atualizacao
 			""";
 
 	private static final String UPDATE = """
-			UPDATE investidor
+			UPDATE cadastros.investidor
 			SET nome = ?, cpf = ?, apta_negociacao = ?
 			WHERE codigo = ?
+			RETURNING codigo, nome, cpf, apta_negociacao, data_criacao, data_atualizacao
 			""";
 
 	private static final String DELETE = """
-			DELETE FROM investidor
+			DELETE FROM cadastros.investidor
 			WHERE codigo = ?
 			""";
 
@@ -48,25 +63,40 @@ public class InvestidorRepositoryImpl implements InvestidorRepository {
 	}
 
 	@Override
+	public Optional<Investidor> findByCpf(String cpf) {
+		return jdbcTemplate.query(SELECT_BY_CPF, rowMapper, cpf).stream().findFirst();
+	}
+
+	@Override
+	public List<Investidor> findAll() {
+		return jdbcTemplate.query(SELECT_ALL, rowMapper);
+	}
+
+	@Override
 	public Investidor save(Investidor investidor) {
-		jdbcTemplate.update(
+		return jdbcTemplate.query(
 				INSERT,
-				investidor.getCodigo(),
+				rowMapper,
 				investidor.getNome(),
 				investidor.getCpf(),
-				investidor.isAptaNegociacao());
-		return findByCodigo(investidor.getCodigo()).orElseThrow();
+				investidor.isAptaNegociacao())
+				.stream()
+				.findFirst()
+				.orElseThrow();
 	}
 
 	@Override
 	public Investidor update(Investidor investidor) {
-		jdbcTemplate.update(
+		return jdbcTemplate.query(
 				UPDATE,
+				rowMapper,
 				investidor.getNome(),
 				investidor.getCpf(),
 				investidor.isAptaNegociacao(),
-				investidor.getCodigo());
-		return findByCodigo(investidor.getCodigo()).orElseThrow();
+				investidor.getCodigo())
+				.stream()
+				.findFirst()
+				.orElseThrow();
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package cadastro.investidor.api.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +32,20 @@ public class InvestidorServiceImpl implements InvestidorService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public List<InvestidorResponse> listarTodos() {
+		return investidorRepository.findAll().stream()
+				.map(InvestidorResponse::from)
+				.toList();
+	}
+
+	@Override
 	public InvestidorResponse criar(InvestidorRequest request) {
-		if (investidorRepository.findByCodigo(request.getCodigo()).isPresent()) {
-			throw new InvestidorAlreadyExistsException(request.getCodigo());
+		if (investidorRepository.findByCpf(request.getCpf()).isPresent()) {
+			throw new InvestidorAlreadyExistsException(request.getCpf());
 		}
 
 		Investidor investidor = Investidor.builder()
-				.codigo(request.getCodigo())
 				.nome(request.getNome())
 				.cpf(request.getCpf())
 				.aptaNegociacao(request.getAptaNegociacao())
@@ -46,13 +55,19 @@ public class InvestidorServiceImpl implements InvestidorService {
 	}
 
 	@Override
-	public InvestidorResponse atualizar(InvestidorRequest request) {
-		if (investidorRepository.findByCodigo(request.getCodigo()).isEmpty()) {
-			throw new InvestidorNotFoundException(request.getCodigo());
+	public InvestidorResponse atualizar(Integer codigo, InvestidorRequest request) {
+		if (investidorRepository.findByCodigo(codigo).isEmpty()) {
+			throw new InvestidorNotFoundException(codigo);
+		}
+
+		if (investidorRepository.findByCpf(request.getCpf())
+				.filter(investidor -> !investidor.getCodigo().equals(codigo))
+				.isPresent()) {
+			throw new InvestidorAlreadyExistsException(request.getCpf());
 		}
 
 		Investidor investidor = Investidor.builder()
-				.codigo(request.getCodigo())
+				.codigo(codigo)
 				.nome(request.getNome())
 				.cpf(request.getCpf())
 				.aptaNegociacao(request.getAptaNegociacao())
