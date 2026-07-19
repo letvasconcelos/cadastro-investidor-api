@@ -17,5 +17,5 @@ public interface InvestidorRepository {
 
 	Investidor update(Investidor investidor);
 
-	void deleteByCodigo(Integer codigo);
+	void desativarPorCodigo(Integer codigo);
 }

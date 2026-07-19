@@ -103,12 +103,12 @@ class InvestidorServiceImplTest {
 	}
 
 	@Test
-	void deveRemoverInvestidorExistente() {
+	void deveDesativarInvestidorExistente() {
 		when(repository.findByCodigo(1)).thenReturn(Optional.of(investidor()));
 
 		service.remover(1);
 
-		verify(repository).deleteByCodigo(1);
+		verify(repository).desativarPorCodigo(1);
 	}
 
 	private InvestidorRequest request() {

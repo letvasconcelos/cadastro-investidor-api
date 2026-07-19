@@ -19,7 +19,7 @@ import cadastro.investidor.api.interfaces.InvestidorService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/cadastro-investidor-api/v1/investidores")
+@RequestMapping("/cadastro-investidor-api/v1/cadastros/investidor")
 public class InvestidorController {
 
 	private final InvestidorService investidorService;

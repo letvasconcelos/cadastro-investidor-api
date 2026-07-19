@@ -44,8 +44,9 @@ public class InvestidorRepositoryImpl implements InvestidorRepository {
 			RETURNING codigo, nome, cpf, apta_negociacao, data_criacao, data_atualizacao
 			""";
 
-	private static final String DELETE = """
-			DELETE FROM cadastros.investidor
+	private static final String DESATIVAR = """
+			UPDATE cadastros.investidor
+			SET apta_negociacao = false
 			WHERE codigo = ?
 			""";
 
@@ -100,7 +101,7 @@ public class InvestidorRepositoryImpl implements InvestidorRepository {
 	}
 
 	@Override
-	public void deleteByCodigo(Integer codigo) {
-		jdbcTemplate.update(DELETE, codigo);
+	public void desativarPorCodigo(Integer codigo) {
+		jdbcTemplate.update(DESATIVAR, codigo);
 	}
 }

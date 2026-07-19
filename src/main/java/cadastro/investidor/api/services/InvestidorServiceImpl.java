@@ -81,6 +81,6 @@ public class InvestidorServiceImpl implements InvestidorService {
 		if (investidorRepository.findByCodigo(codigo).isEmpty()) {
 			throw new InvestidorNotFoundException(codigo);
 		}
-		investidorRepository.deleteByCodigo(codigo);
+		investidorRepository.desativarPorCodigo(codigo);
 	}
 }

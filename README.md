@@ -6,11 +6,11 @@ Microsserviço para CRUD de investidores da plataforma de negociação. API REST
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| GET | `/cadastro-investidor-api/v1/investidores` | Listar investidores |
-| GET | `/cadastro-investidor-api/v1/investidores/{codigo}` | Buscar investidor por código |
-| POST | `/cadastro-investidor-api/v1/investidores` | Criar investidor |
-| PUT | `/cadastro-investidor-api/v1/investidores/{codigo}` | Atualizar investidor |
-| DELETE | `/cadastro-investidor-api/v1/investidores/{codigo}` | Remover investidor |
+| GET | `/cadastro-investidor-api/v1/cadastros/investidor` | Listar investidores |
+| GET | `/cadastro-investidor-api/v1/cadastros/investidor/{codigo}` | Buscar investidor por código |
+| POST | `/cadastro-investidor-api/v1/cadastros/investidor` | Criar investidor |
+| PUT | `/cadastro-investidor-api/v1/cadastros/investidor/{codigo}` | Atualizar investidor |
+| DELETE | `/cadastro-investidor-api/v1/cadastros/investidor/{codigo}` | Inativa o investidor (delete lógico via `apta_negociacao = false`) |
 
 O corpo de criação e atualização contém somente os campos editáveis:
 
@@ -27,7 +27,7 @@ Código, data de criação e data de atualização são gerados pelo banco.
 ## Nginx
 
 ```nginx
-location /cadastro-investidor-api/v1/investidores {
+location /cadastro-investidor-api/ {
     proxy_pass http://cadastro-investidor-api:8080;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
